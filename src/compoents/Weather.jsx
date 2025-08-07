@@ -33,6 +33,9 @@ const Weather = () => {
         "13n" : snow_icon
     }
 
+
+    const apiKey = import.meta.env.VITE_APP_ID;
+
     const search = async(city)=>{
         if(city === ""){
             setError("Please enter a city name.");
@@ -40,7 +43,7 @@ const Weather = () => {
             return;
         }
         try {
-            const url =`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_APP_ID}`
+            const url =`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
             const res = await fetch(url);
             const data = await res.json();
             
@@ -70,10 +73,16 @@ const Weather = () => {
         search("Nablus");
     } , [])
 
+    const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      search(inputRef.current.value);
+    }
+  }
+
   return (
     <div className='weather'>
         <div className="search-bar">
-            <input ref={inputRef} type="text" placeholder='Search' />
+            <input ref={inputRef} type="text" placeholder='Search' onKeyDown={handleKeyDown} />
             <img src={search_icon} alt="" onClick={()=>search(inputRef.current.value)} />
         </div>
         {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
